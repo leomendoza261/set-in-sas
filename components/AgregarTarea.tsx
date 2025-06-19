@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CirclePlus } from 'lucide-react';
 
 const diasSemana = ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'];
 const bloquesHorarios = [
@@ -14,25 +14,28 @@ const bloquesHorarios = [
 
 const opciones = {
   clientes: ['Cliente A', 'Cliente B'],
-  proyectos: ['SW16', 'SW17', 'SW18', 'TN16', 'TN17', 'QU1', 'QU2', 'QU3'],
+  proyectos: ['SW16', 'SFF2050', 'ZKX300'],
   usuarios: ['usuario 1', 'usuario 2', 'usuario n°'],
   maquinas: ['máquina 1', 'máquina 2']
 };
 
 const coloresProyectos: Record<string, string> = {
-  SW16: 'bg-blue-300',
-  SW17: 'bg-blue-400',
-  SW18: 'bg-blue-500',
-  TN16: 'bg-pink-300',
-  TN17: 'bg-pink-400',
-  QU1: 'bg-green-300',
-  QU2: 'bg-green-400',
-  QU3: 'bg-green-500'
+  SW16: 'bg-blue-500 text-white',
+  SFF2050: 'bg-red-500 text-white',
+  ZKX300: 'bg-green-500 text-white'
 };
 
 const ComponenteAsignacionSemanal = () => {
-  const [semana, setSemana] = useState(1);
-  const [modalInfo, setModalInfo] = useState<{ dia: string; hora: string } | null>(null);
+  const [fechaBase, setFechaBase] = useState(() => {
+    const hoy = new Date();
+    const dia = hoy.getDay(); // 0 (domingo) a 6 (sábado)
+    const lunes = new Date(hoy);
+    lunes.setDate(hoy.getDate() - ((dia + 6) % 7)); // obtener lunes de la semana actual
+    lunes.setHours(0, 0, 0, 0);
+    return lunes;
+  });
+
+  const [modalInfo, setModalInfo] = useState<{ diaIndex: number; hora: string } | null>(null);
   const [formulario, setFormulario] = useState({
     cliente: '',
     proyecto: '',
@@ -42,8 +45,21 @@ const ComponenteAsignacionSemanal = () => {
   });
   const [asignaciones, setAsignaciones] = useState<Record<string, typeof formulario>>({});
 
-  const abrirModal = (dia: string, hora: string) => {
-    setModalInfo({ dia, hora });
+  const diasConFecha = Array.from({ length: 7 }, (_, i) => {
+    const fecha = new Date(fechaBase);
+    fecha.setDate(fechaBase.getDate() + i);
+    return {
+      etiqueta: `${diasSemana[i]} - ${fecha.getDate()}`,
+      key: fecha.toISOString().split('T')[0]
+    };
+  });
+
+  const semanaNum = getNumeroSemana(fechaBase);
+  const nombreMes = fechaBase.toLocaleDateString('es-ES', { month: 'long' });
+  const anio = fechaBase.getFullYear();
+
+  const abrirModal = (diaIndex: number, hora: string) => {
+    setModalInfo({ diaIndex, hora });
   };
 
   const cerrarModal = () => {
@@ -56,23 +72,29 @@ const ComponenteAsignacionSemanal = () => {
     setFormulario((prev) => ({ ...prev, [name]: value }));
   };
 
-  const guardarAsignacion = () => {
-    if (modalInfo) {
-      const key = `${modalInfo.dia}-${modalInfo.hora}`;
-      setAsignaciones((prev) => ({ ...prev, [key]: formulario }));
-      cerrarModal();
-    }
+  const asignarTurno = () => {
+    if (!modalInfo) return;
+    const diaKey = diasConFecha[modalInfo.diaIndex].key;
+    const clave = `${diaKey}_${modalInfo.hora}`;
+    setAsignaciones((prev) => ({ ...prev, [clave]: formulario }));
+    cerrarModal();
+  };
+
+  const cambiarSemana = (direccion: number) => {
+    const nuevaFecha = new Date(fechaBase);
+    nuevaFecha.setDate(fechaBase.getDate() + direccion * 7);
+    setFechaBase(nuevaFecha);
   };
 
   return (
     <div className="p-4 w-full h-full">
       <div className="flex justify-center items-center gap-6 mb-4">
-        <button className="px-4 py-2 bg-gray-800 text-white rounded flex items-center gap-2" onClick={() => setSemana(semana - 1)}>
-          <ChevronLeft /> Semana {semana - 1}
+        <button className="px-4 py-2 bg-gray-800 text-white rounded flex items-center gap-2" onClick={() => cambiarSemana(-1)}>
+          <ChevronLeft /> Semana {semanaNum - 1}
         </button>
-        <h2 className="text-xl font-semibold">Semana {semana}</h2>
-        <button className="px-4 py-2 bg-gray-800 text-white rounded flex items-center gap-2" onClick={() => setSemana(semana + 1)}>
-          Semana {semana + 1} <ChevronRight />
+        <h2 className="text-xl font-semibold">Semana {semanaNum} - {nombreMes} {anio}</h2>
+        <button className="px-4 py-2 bg-gray-800 text-white rounded flex items-center gap-2" onClick={() => cambiarSemana(1)}>
+          Semana {semanaNum + 1} <ChevronRight />
         </button>
       </div>
 
@@ -81,12 +103,12 @@ const ComponenteAsignacionSemanal = () => {
           <thead>
             <tr>
               <th className="border px-2 py-1 text-xs">H. INICIO<br />H. FIN</th>
-              {diasSemana.map((dia, i) => (
+              {diasConFecha.map((dia, i) => (
                 <th
                   key={i}
                   className={`border px-2 py-1 text-xs w-24 ${i === 0 || i === 6 ? 'bg-gray-200 text-gray-500' : ''}`}
                 >
-                  {dia}
+                  {dia.etiqueta}
                 </th>
               ))}
             </tr>
@@ -95,30 +117,32 @@ const ComponenteAsignacionSemanal = () => {
             {bloquesHorarios.map((hora, i) => (
               <tr key={i}>
                 <td className="border px-1 text-xs text-center whitespace-nowrap">{hora}</td>
-                {diasSemana.map((dia, j) => {
-                  const key = `${dia}-${hora}`;
-                  const asignado = asignaciones[key];
-                  const bgColor = asignado ? coloresProyectos[asignado.proyecto] || 'bg-gray-300' : '';
-
+                {diasConFecha.map((dia, j) => {
+                  const clave = `${dia.key}_${hora}`;
+                  const asignacion = asignaciones[clave];
+                  const proyecto = asignacion?.proyecto;
                   return (
                     <td
                       key={j}
-                      className={`border text-center text-xs h-12 relative ${j === 0 || j === 6 ? 'bg-gray-100 text-gray-400' : ''} ${bgColor}`}
+                      className={`border text-center text-xs h-12 relative ${j === 0 || j === 6 ? 'bg-gray-100 text-gray-400' : ''}`}
                     >
                       {(j !== 0 && j !== 6) && (
-                        <button
-                          className="absolute top-1 right-1 text-gray-500 hover:text-blue-600"
-                          onClick={() => abrirModal(dia, hora)}
-                        >
-                          +
-                        </button>
-                      )}
-                      {asignado && (
-                        <div className="text-[10px] leading-tight pt-1">
-                          <div>{asignado.proyecto}</div>
-                          <div>{asignado.cliente}</div>
-                          <div>{asignado.maquina}</div>
-                        </div>
+                        <>
+                          {!asignacion ? (
+                            <button
+                              className="absolute top-1 right-1 text-gray-500 hover:text-blue-600"
+                              onClick={() => abrirModal(j, hora)}
+                            >
+                              <CirclePlus className="h-3.5 w-3.5" />
+                            </button>
+                          ) : (
+                            <div className={`text-xs p-1 rounded ${coloresProyectos[proyecto] || 'bg-gray-300'}`}>
+                              <strong>{proyecto}</strong><br />
+                              <span className="text-[10px]">{asignacion.cliente}</span><br />
+                              <span className="text-[10px]">{asignacion.maquina}</span>
+                            </div>
+                          )}
+                        </>
                       )}
                     </td>
                   );
@@ -129,45 +153,30 @@ const ComponenteAsignacionSemanal = () => {
         </table>
       </div>
 
+      {/* Modal */}
       {modalInfo && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold mb-2">Asignar turno</h3>
-            <p className="text-sm mb-4">{modalInfo.dia} - {modalInfo.hora}</p>
+            <p className="text-sm mb-4">{diasConFecha[modalInfo.diaIndex].etiqueta} - {modalInfo.hora}</p>
 
             <div className="space-y-3">
-              <div>
-                <label className="text-sm">Cliente</label>
-                <select name="cliente" value={formulario.cliente} onChange={handleChange} className="w-full border rounded px-2 py-1">
-                  <option value="">Seleccionar cliente</option>
-                  {opciones.clientes.map((c, i) => <option key={i} value={c}>{c}</option>)}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-sm">Proyecto</label>
-                <select name="proyecto" value={formulario.proyecto} onChange={handleChange} className="w-full border rounded px-2 py-1">
-                  <option value="">Seleccionar proyecto</option>
-                  {opciones.proyectos.map((p, i) => <option key={i} value={p}>{p}</option>)}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-sm">Usuario</label>
-                <select name="usuario" value={formulario.usuario} onChange={handleChange} className="w-full border rounded px-2 py-1">
-                  <option value="">Seleccionar usuario</option>
-                  {opciones.usuarios.map((u, i) => <option key={i} value={u}>{u}</option>)}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-sm">Máquina</label>
-                <select name="maquina" value={formulario.maquina} onChange={handleChange} className="w-full border rounded px-2 py-1">
-                  <option value="">Seleccionar máquina</option>
-                  {opciones.maquinas.map((m, i) => <option key={i} value={m}>{m}</option>)}
-                </select>
-              </div>
-
+              {['cliente', 'proyecto', 'usuario', 'maquina'].map((campo) => (
+                <div key={campo}>
+                  <label className="text-sm capitalize">{campo}</label>
+                  <select
+                    name={campo}
+                    value={(formulario as any)[campo]}
+                    onChange={handleChange}
+                    className="w-full border rounded px-2 py-1"
+                  >
+                    <option value="">Seleccionar {campo}</option>
+                    {(opciones as any)[`${campo}s`].map((item: string, i: number) => (
+                      <option key={i} value={item}>{item}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
               <div>
                 <label className="text-sm">Pieza</label>
                 <input
@@ -183,7 +192,7 @@ const ComponenteAsignacionSemanal = () => {
 
             <div className="flex justify-end gap-2 mt-4">
               <button onClick={cerrarModal} className="bg-gray-300 px-4 py-2 rounded">Cancelar</button>
-              <button onClick={guardarAsignacion} className="bg-blue-600 text-white px-4 py-2 rounded">Asignar</button>
+              <button onClick={asignarTurno} className="bg-blue-600 text-white px-4 py-2 rounded">Asignar</button>
             </div>
           </div>
         </div>
@@ -192,4 +201,16 @@ const ComponenteAsignacionSemanal = () => {
   );
 };
 
+// ✅ Función para obtener el número de semana ISO
+function getNumeroSemana(fecha: Date) {
+  const temp = new Date(fecha.getTime());
+  temp.setHours(0, 0, 0, 0);
+  temp.setDate(temp.getDate() + 3 - ((temp.getDay() + 6) % 7)); // jueves de la semana actual
+  const semana1 = new Date(temp.getFullYear(), 0, 4); // jueves de la semana 1
+  return 1 + Math.round(
+    ((temp.getTime() - semana1.getTime()) / 86400000 - 3 + ((semana1.getDay() + 6) % 7)) / 7
+  );
+}
+
 export default ComponenteAsignacionSemanal;
+
