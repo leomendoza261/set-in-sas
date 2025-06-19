@@ -18,7 +18,7 @@ export default function AgregarTareaPage() {
     return (
         <div>
             <Tabs defaultValue="all">
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                     <div className="ml-auto flex items-center gap-2">
                         <Button size="sm" className="h-8 gap-1">
                             <CalendarPlus className="h-3.5 w-3.5" />
@@ -27,7 +27,7 @@ export default function AgregarTareaPage() {
                             </span>
                         </Button>
                     </div>
-                </div>
+                </div> */}
                 <TabsContent value="all">
 
                 </TabsContent>
