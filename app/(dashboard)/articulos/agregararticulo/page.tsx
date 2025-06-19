@@ -10,9 +10,10 @@ import {
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { File, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import TablaProyectos from '@/components/TablaProyectos';
+import FormularioAgregarArticulo from '@/components/AgregarArticulo';
 
-export default function ProyectosPage() {
+
+export default function AgregarArticuloPage() {
   return (
     <div>
 
@@ -23,13 +24,13 @@ export default function ProyectosPage() {
             <Button size="sm" variant="outline" className="h-8 gap-1">
               <File className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                Exportar
+                Exportar Movimientos de la fecha
               </span>
             </Button>
             <Button size="sm" className="h-8 gap-1">
               <PlusCircle className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                Añadir proyecto
+                Algo?
               </span>
             </Button>
           </div>
@@ -40,11 +41,11 @@ export default function ProyectosPage() {
       </Tabs>
       <Card>
         <CardHeader>
-          <CardTitle>Proyectos</CardTitle>
-          <CardDescription>Tabla de detalle de articulos por proyecto</CardDescription>
+          <CardTitle>Añadir Articulo</CardTitle>
+          <CardDescription>Registrar un nuevo articulo al inventario.</CardDescription>
         </CardHeader>
         <CardContent>
-          <TablaProyectos />
+            <FormularioAgregarArticulo />
         </CardContent>
       </Card>
     </div>

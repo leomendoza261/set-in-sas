@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import {
+  ArrowLeftRight,
+  CalendarDays,
   Home,
   LineChart,
   Package,
@@ -70,7 +72,7 @@ function DesktopNav() {
           <span className="sr-only">Acme Inc</span>
         </Link>
 
-        <NavItem href="#" label="Dashboard">
+        <NavItem href="/" label="Dashboard">
           <Home className="h-5 w-5" />
         </NavItem>
 
@@ -82,12 +84,20 @@ function DesktopNav() {
           <Package className="h-5 w-5" />
         </NavItem>
 
+        <NavItem href="/articulos/movimientos" label="Movimientos">
+          <ArrowLeftRight className="h-5 w-5" />
+        </NavItem>
+
         <NavItem href="/proveedores" label="Proveedores">
           <Users2 className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="/proyectos" label="Proyectos">
           <LineChart className="h-5 w-5" />
+        </NavItem>
+
+        <NavItem href="/programacion" label="Programacion">
+          <CalendarDays className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">

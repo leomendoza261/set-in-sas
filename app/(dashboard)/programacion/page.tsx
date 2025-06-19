@@ -8,12 +8,13 @@ import {
 } from '@/components/ui/card';
 
 import { Tabs, TabsContent } from '@/components/ui/tabs';
-import { File, Package, PlusCircle } from 'lucide-react';
+import { CalendarPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ComponenteTurnos from '@/components/DashboardProgramacion';
 import Link from 'next/link';
-import TablaMovimientos from '@/components/TablaMovimientos';
 
-export default function MovimientosPage() {
+
+export default function ProgramacionPage() {
   return (
     <div>
 
@@ -21,17 +22,11 @@ export default function MovimientosPage() {
       <Tabs defaultValue="all">
         <div className="flex items-center">
           <div className="ml-auto flex items-center gap-2">
-            <Button size="sm" variant="outline" className="h-8 gap-1">
-              <File className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                Exportar Movimientos de la fecha
-              </span>
-            </Button>
-            <Link href={'/articulos/agregarmovimiento'} >
+            <Link href={'/programacion/agregartarea'} >
               <Button size="sm" className="h-8 gap-1">
-                <PlusCircle className="h-3.5 w-3.5" />
+                <CalendarPlus className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Añadir movimiento
+                  Asignar Tarea
                 </span>
               </Button>
             </Link>
@@ -43,11 +38,11 @@ export default function MovimientosPage() {
       </Tabs>
       <Card>
         <CardHeader>
-          <CardTitle>Movimiento de articulos</CardTitle>
-          <CardDescription>Tabla detallada de movimientos de articulos.</CardDescription>
+          <CardTitle>Programacion</CardTitle>
+          <CardDescription>Visualizacion de tareas programadas</CardDescription>
         </CardHeader>
         <CardContent>
-            <TablaMovimientos />
+          <ComponenteTurnos />
         </CardContent>
       </Card>
     </div>

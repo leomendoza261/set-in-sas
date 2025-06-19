@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Button } from './ui/button';
 
 type Form = {
     id_proveedor: number | null;
@@ -119,7 +120,7 @@ export default function FormularioMovimiento() {
                 className="w-full border px-2 py-1"
                 required
             />
-
+            
             <input
                 type="number"
                 placeholder="Cantidad"
@@ -128,7 +129,7 @@ export default function FormularioMovimiento() {
                 className="w-full border px-2 py-1"
                 required
             />
-
+            
             <select
                 value={form.unidad_medida ?? ""}
                 onChange={(e) => setForm({ ...form, unidad_medida: e.target.value ? Number(e.target.value) : null })}
@@ -154,9 +155,11 @@ export default function FormularioMovimiento() {
                 ))}
             </select>
 
-            <button type="submit" className="bg-blue-600 text-gray-50 px-4 py-2 rounded w-full">
-                Registrar movimiento
-            </button>
+            <Button type="submit" className="rounded w-full px-4 py-2">
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  Registrar movimiento
+                </span>
+            </Button>
         </form>
     )
 }

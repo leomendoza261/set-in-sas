@@ -5,13 +5,14 @@ import { useEffect, useState } from 'react';
 interface Material {
   cliente: string;
   proyecto: string;
-  item: string;
+  id_articulo: number
+  articulo: string;
   tipo: string;
   cantidad: number;
   stock: number;
   comprar: number;
 }
-
+ 
 export default function TablaProyectos() {
   const [materiales, setMateriales] = useState<Material[]>([]);
   const [clienteFiltro, setClienteFiltro] = useState('');
@@ -42,8 +43,8 @@ export default function TablaProyectos() {
   }, [clienteFiltro, proyectoFiltro]);
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Materiales por Proyecto</h2>
+    <div className="p-4 space-y-4">
+
 
       {/* Filtros */}
       <div className="flex flex-wrap gap-4 mb-4">
@@ -75,29 +76,31 @@ export default function TablaProyectos() {
       </div>
 
       {/* Tabla */}
-      <div className="overflow-x-auto">
-        <table className="w-full table-auto border border-gray-300">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 border">Cliente</th>
-              <th className="p-2 border">Proyecto</th>
-              <th className="p-2 border">Item</th>
-              <th className="p-2 border">Tipo</th>
-              <th className="p-2 border">Cantidad</th>
-              <th className="p-2 border">Stock</th>
-              <th className="p-2 border">Comprar</th>
+      <div className="overflow-auto rounded-lg border shadow-sm">
+        <table className="w-full text-sm">
+          <thead className="bg-muted/40">
+            <tr>
+              <th className="border px-2 py-1">Cliente</th>
+              <th className="border px-2 py-1">Proyecto</th>
+              <th className="border px-2 py-1">ID articulo</th>
+              <th className="border px-2 py-1">Articulo</th>
+              <th className="border px-2 py-1">Tipo</th>
+              <th className="border px-2 py-1">Cantidad</th>
+              <th className="border px-2 py-1">Stock</th>
+              <th className="border px-2 py-1">Comprar</th>
             </tr>
           </thead>
           <tbody>
             {materiales.map((m, i) => (
               <tr key={i} className="text-sm text-center">
-                <td className="p-2 border">{m.cliente}</td>
-                <td className="p-2 border">{m.proyecto}</td>
-                <td className="p-2 border">{m.item}</td>
-                <td className="p-2 border">{m.tipo}</td>
-                <td className="p-2 border">{m.cantidad}</td>
-                <td className="p-2 border">{m.stock}</td>
-                <td className="p-2 border font-semibold text-red-600">
+                <td className="border px-2 py-1">{m.cliente}</td>
+                <td className="border px-2 py-1">{m.proyecto}</td>
+                <td className="border px-2 py-1">{m.id_articulo}</td>
+                <td className="border px-2 py-1">{m.articulo}</td>
+                <td className="border px-2 py-1">{m.tipo}</td>
+                <td className="border px-2 py-1">{m.cantidad}</td>
+                <td className="border px-2 py-1">{m.stock}</td>
+                <td className="border px-2 py-1 font-semibold text-red-600">
                   {m.comprar}
                 </td>
               </tr>
