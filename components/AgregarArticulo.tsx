@@ -82,14 +82,6 @@ export default function FormularioAgregarArticulo() {
     return (
         <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded max-w-md">
 
-            {/* <input
-                type="number"
-                placeholder="ID Artículo"
-                value={form.id_articulo ?? ""}
-                onChange={(e) => setForm({ ...form, id_articulo: e.target.value ? Number(e.target.value) : null })}
-                className="w-full border px-2 py-1"
-            /> */}
-
             <select
                 value={form.tipo_articulo ?? ""}
                 onChange={(e) => {
@@ -125,6 +117,8 @@ export default function FormularioAgregarArticulo() {
 
             <input
                 type="number"
+                min="0"
+                step="1"
                 placeholder="Cantidad"
                 value={form.cantidad_stock ?? ""}
                 onChange={(e) => setForm({ ...form, cantidad_stock: e.target.value ? Number(e.target.value) : null })}
