@@ -53,7 +53,7 @@ export default function ArticulosPage() {
                   Exportar
                 </span>
               </Button>
-              <Link href={'#'} >
+              <Link href={'/articulos/agregarsubconjunto'} >
                 <Button size="sm" className="h-8 gap-1">
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
@@ -72,7 +72,7 @@ export default function ArticulosPage() {
                   Exportar
                 </span>
               </Button>
-              <Link href={'#'} >
+              <Link href={'/articulos/agregarconjunto'} >
                 <Button size="sm" className="h-8 gap-1">
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
