@@ -7,17 +7,23 @@ import {
   CardTitle
 } from '@/components/ui/card';
 
-import { Tabs, TabsContent } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { File, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import TablaProyectos from '@/components/TablaProyectos';
+import TablaMaterialesJerarquica from '@/components/TablaProyectoCompleta';
 
 export default function ProyectosPage() {
   return (
     <div>
 
+      <Tabs defaultValue="opcion1">
 
-      <Tabs defaultValue="all">
+        <TabsList>
+          <TabsTrigger value="opcion1">opcion 1 </TabsTrigger>
+          <TabsTrigger value="opcion2">opcion 2</TabsTrigger>
+        </TabsList>
+
         <div className="flex items-center">
           <div className="ml-auto flex items-center gap-2">
             <Button size="sm" variant="outline" className="h-8 gap-1">
@@ -34,19 +40,32 @@ export default function ProyectosPage() {
             </Button>
           </div>
         </div>
-        <TabsContent value="all">
 
+        <TabsContent value="opcion1">
+          <Card>
+            <CardHeader>
+              <CardTitle>Proyectos</CardTitle>
+              <CardDescription>Tabla de detalle de articulos por proyecto</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <TablaMaterialesJerarquica />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="opcion2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Proyectos</CardTitle>
+              <CardDescription>Tabla de detalle de articulos por proyecto</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <TablaProyectos />
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
-      <Card>
-        <CardHeader>
-          <CardTitle>Proyectos</CardTitle>
-          <CardDescription>Tabla de detalle de articulos por proyecto</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <TablaProyectos />
-        </CardContent>
-      </Card>
+
     </div>
   );
 }
