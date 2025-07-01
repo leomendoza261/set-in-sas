@@ -103,7 +103,7 @@ export default function TablaMaterialesJerarquica() {
           <td className="border px-2 py-1 text-sm">{material.stock}</td>
           <td className="border px-2 py-1 text-sm">{material.cantidad_reservada}</td>
           <td className="border px-2 py-1 text-sm">{material.disponible}</td>
-          <td className="border px-2 py-1 text-sm">{material.comprar_o_fabricar}</td>
+          <td className="border px-2 py-1 text-sm text-red-500">{material.comprar_o_fabricar}</td>
           <td className="border px-1 py-1 text-sm space-x-1">
             <Button size="icon" variant="ghost" className="h-6 w-6"><Eye size={12} /></Button>
             <Button size="icon" variant="ghost" className="h-6 w-6"><Pencil size={12} /></Button>
