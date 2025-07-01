@@ -9,6 +9,7 @@ interface Material {
   proyecto: string;
   id_material: number;
   nivel: "C" | "S" | "P";
+  codigo: string;
   nombre: string;
   cantidad: string;
   stock: number;
@@ -99,6 +100,7 @@ export default function TablaMaterialesJerarquica() {
             {material.nombre}
           </td>
           <td className="border px-2 py-1 text-sm">{material.nivel}</td>
+          <td className="border px-2 py-1 text-sm">{material.codigo}</td>
           <td className="border px-2 py-1 text-sm">{material.cantidad}</td>
           <td className="border px-2 py-1 text-sm">{material.stock}</td>
           <td className="border px-2 py-1 text-sm">{material.cantidad_reservada}</td>
@@ -150,6 +152,7 @@ export default function TablaMaterialesJerarquica() {
               <th className="border px-2 py-1">Proyecto</th>
               <th className="border px-2 py-1 text-left">Nombre</th>
               <th className="border px-2 py-1">Nivel</th>
+              <th className="border px-2 py-1">Codigo</th>
               <th className="border px-2 py-1">Cantidad</th>
               <th className="border px-2 py-1">Stock</th>
               <th className="border px-2 py-1">Reservado</th>

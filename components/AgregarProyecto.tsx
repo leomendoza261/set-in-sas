@@ -66,7 +66,7 @@ export default function FormularioAgregarProyecto() {
         const copiaConNombre = [...form[tipo]];
         copiaConNombre[index].nombre = nombre;
         setForm((prev) => ({ ...prev, [tipo]: copiaConNombre }));
-      }, 1000);
+      }, 100);
     }
   };
 
