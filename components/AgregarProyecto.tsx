@@ -26,7 +26,7 @@ export default function FormularioAgregarProyecto() {
   useEffect(() => {
     const fetchData = async () => {
       const [cli, usu] = await Promise.all([
-        fetch("/api/clientes").then((r) => r.json()),
+        fetch("/api/clientes/clientes_nombre").then((r) => r.json()),
         fetch("/api/usuarios").then((r) => r.json()),
       ]);
       setClientes(cli);
