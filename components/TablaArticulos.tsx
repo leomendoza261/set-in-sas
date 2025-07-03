@@ -1,6 +1,8 @@
 "use client"
 
+import { ArrowLeftRight } from "lucide-react"
 import { useEffect, useState } from "react"
+import ModalMovimiento from "./ModalMovimiento"
 
 type ArticuloRaw = {
   id_articulo: number
@@ -39,9 +41,18 @@ export default function TablaArticulos() {
   const [caracteristicas, setCaracteristicas] = useState<string[]>([])
 
   const [filtroId, setFiltroId] = useState("")
+  const [filtroNombre, setFiltroNombre] = useState("")
   const [filtroTipo, setFiltroTipo] = useState("")
   const [filtroCaracteristica, setFiltroCaracteristica] = useState("")
   const [filtroStockCero, setFiltroStockCero] = useState(false)
+
+  const [modalAbierto, setModalAbierto] = useState(false)
+  const [articuloSeleccionado, setArticuloSeleccionado] = useState<number | null>(null)
+
+  const abrirModalMovimiento = (id: number) => {
+    setArticuloSeleccionado(id)
+    setModalAbierto(true)
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,7 +78,7 @@ export default function TablaArticulos() {
     fetchData()
     fetchTipos()
     fetchCaracteristicas()
-  }, [])
+  }, [setModalAbierto])
 
   useEffect(() => {
     const agrupados: Record<number, ArticuloAgrupado> = {}
@@ -104,24 +115,33 @@ export default function TablaArticulos() {
     const matchTipo = filtroTipo ? art.tipo_articulo === filtroTipo : true
     const matchCaract = filtroCaracteristica ? art.caracteristica === filtroCaracteristica : true
     const matchStock = filtroStockCero ? art.stock === 0 : true
-    return matchId && matchTipo && matchCaract && matchStock
+    const matchNombre = filtroNombre ? art.nombre_articulo.toLowerCase().includes(filtroNombre.toLowerCase()) : true
+    return matchId && matchTipo && matchCaract && matchStock && matchNombre
   })
 
   return (
-    <div className="p-4 space-y-4">
-      <div className="flex flex-col md:flex-row gap-4 flex-wrap">
+    <div className="p-4 space-y-6">
+      <div className="flex flex-col md:flex-row gap-6 flex-wrap">
         <input
           type="text"
           value={filtroId}
           onChange={(e) => setFiltroId(e.target.value)}
           placeholder="Filtrar por ID"
-          className="border rounded px-2 py-1 w-full md:w-1/4"
+          className="border rounded px-2 py-1 w-full md:w-1/5"
+        />
+
+        <input
+          type="text"
+          value={filtroNombre}
+          onChange={(e) => setFiltroNombre(e.target.value)}
+          placeholder="Filtrar por nombre"
+          className="border rounded px-2 py-1 w-full md:w-1/5"
         />
 
         <select
           value={filtroTipo}
           onChange={(e) => setFiltroTipo(e.target.value)}
-          className="border rounded px-2 py-1 w-full md:w-1/4"
+          className="border rounded px-2 py-1 w-full md:w-1/5"
         >
           <option value="">Todos los tipos</option>
           {tiposArticulo.map((tipo) => (
@@ -134,7 +154,7 @@ export default function TablaArticulos() {
         <select
           value={filtroCaracteristica}
           onChange={(e) => setFiltroCaracteristica(e.target.value)}
-          className="border rounded px-2 py-1 w-full md:w-1/4"
+          className="border rounded px-2 py-1 w-full md:w-1/5"
         >
           <option value="">Todas las características</option>
           {caracteristicas.map((c) => (
@@ -169,6 +189,7 @@ export default function TablaArticulos() {
               <th className="border px-2 py-1">Unidad</th>
               <th className="border px-2 py-1">Depósito</th>
               <th className="border px-2 py-1">Atributos</th>
+              <th className="border px-2 py-1">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -191,6 +212,9 @@ export default function TablaArticulos() {
                     </div>
                   ))}
                 </td>
+                <td className="border px-2 py-1 space-x-1 text-center">
+                  <button className="text-blue-500 " onClick={() => abrirModalMovimiento(art.id_articulo)}><ArrowLeftRight className="h-3.5 w-3.5" /></button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -199,6 +223,16 @@ export default function TablaArticulos() {
           <div className="mt-4 text-center text-gray-500">No se encontraron artículos.</div>
         )}
       </div>
+
+
+      <ModalMovimiento
+        open={modalAbierto}
+        onClose={() => setModalAbierto(false)}
+        idArticulo={articuloSeleccionado}
+      />
+
+
+
     </div>
   )
 }

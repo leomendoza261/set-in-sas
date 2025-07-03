@@ -44,7 +44,7 @@ export default function AgregarMovimientoPage() {
           <CardDescription>Registrar ingreso o egreso de un articulo.</CardDescription>
         </CardHeader>
         <CardContent>
-            <FormularioMovimiento />
+            <FormularioMovimiento idArticulo={null} />
         </CardContent>
       </Card>
     </div>

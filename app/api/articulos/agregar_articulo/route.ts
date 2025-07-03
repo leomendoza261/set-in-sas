@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/client'
+import { withAuth } from '@/lib/protected-handler';
+import { NextRequest } from 'next/server';
 
-export async function POST(req: Request) {
+export const POST = withAuth(async (_req: NextRequest, session) => {
   try {
-    const body = await req.json()
+    const body = await _req.json()
     const {
       nombre,
       descripcion,
@@ -34,4 +36,4 @@ export async function POST(req: Request) {
     console.error('Error registrando el articulo:', error)
     return NextResponse.json({ error: 'Hubo un error al registrar el articulo' }, { status: 500 })
   }
-}
+})

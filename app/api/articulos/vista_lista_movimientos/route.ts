@@ -1,8 +1,10 @@
 import { NextResponse, NextRequest } from 'next/server'
 import { supabase } from '@/lib/client'
+import { withAuth } from '@/lib/protected-handler';
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
+
+export const GET = withAuth(async (_req: NextRequest, session) => {
+  const { searchParams } = new URL(_req.url);
   const id = searchParams.get('id_movimiento');
   const fecha = searchParams.get('fecha'); // YYYY-MM-DD
   const tipo = searchParams.get('tipo_movimiento');
@@ -33,5 +35,4 @@ export async function GET(req: NextRequest) {
   }
 
   return new NextResponse(JSON.stringify(data), { status: 200 });
-}
-
+})

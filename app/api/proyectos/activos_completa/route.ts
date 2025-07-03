@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/client'; // Ajustá la ruta si usás otro path
+import { supabase } from '@/lib/client'; 
+import { withAuth } from '@/lib/protected-handler';
+import { NextRequest } from 'next/server';
 
-export async function GET() {
+export const GET = withAuth(async (_req: NextRequest, session) => {
   try {
     const { data, error } = await supabase
       .from('vista_materiales_proyecto_completa')
@@ -17,4 +19,4 @@ export async function GET() {
     console.error('Error interno:', e);
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
-}
+})

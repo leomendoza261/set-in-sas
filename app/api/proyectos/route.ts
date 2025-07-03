@@ -1,8 +1,11 @@
+import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/client'
+import { withAuth } from '@/lib/protected-handler';
 import { NextRequest } from 'next/server';
- import { supabase } from '@/lib/client'
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
+export const GET = withAuth(async (_req: NextRequest, session) => {
+
+  const { searchParams } = new URL(_req.url);  // <-- aquí estaba el error
   const cliente = searchParams.get('cliente');
   const proyecto = searchParams.get('proyecto');
 
@@ -16,15 +19,15 @@ export async function GET(request: NextRequest) {
   const { data, error } = await query;
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new NextResponse(JSON.stringify({ error: error.message }), {
       status: 500,
     });
   }
 
-  return new Response(JSON.stringify(data), {
+  return new NextResponse(JSON.stringify(data), {
     status: 200,
     headers: {
       'Content-Type': 'application/json',
     },
   });
-}
+})
