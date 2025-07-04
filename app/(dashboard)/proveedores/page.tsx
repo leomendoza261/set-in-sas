@@ -11,7 +11,8 @@ import {
 } from '@/components/ui/card';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { File, Link, PlusCircle } from 'lucide-react';
+import { File, PlusCircle } from 'lucide-react';
+import Link from 'next/link';
 
 export default function ContactosPage() {
   return (
@@ -26,7 +27,7 @@ export default function ContactosPage() {
             <TabsTrigger value="clientes">Clientes</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="articulos">
+          <TabsContent value="usuarios">
             <div className="ml-auto flex items-end gap-2">
               <Button size="sm" variant="outline" className="h-8 gap-1">
                 <File className="h-3.5 w-3.5" />
@@ -34,18 +35,18 @@ export default function ContactosPage() {
                   Exportar
                 </span>
               </Button>
-              <Link href={'/articulos/agregararticulo'} >
+              <Link href={'#'} >
                 <Button size="sm" className="h-8 gap-1">
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Añadir articulo
+                    Añadir usuario
                   </span>
                 </Button>
               </Link>
             </div>
           </TabsContent>
 
-          <TabsContent value="subconjuntos">
+          <TabsContent value="proveedores">
             <div className="ml-auto flex items-end gap-2">
               <Button size="sm" variant="outline" className="h-8 gap-1">
                 <File className="h-3.5 w-3.5" />
@@ -53,18 +54,18 @@ export default function ContactosPage() {
                   Exportar
                 </span>
               </Button>
-              <Link href={'/articulos/agregarsubconjunto'} >
+              <Link href={'/proveedores/agregarproveedor'} >
                 <Button size="sm" className="h-8 gap-1">
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Añadir subconjunto
+                    Añadir proveedor
                   </span>
                 </Button>
               </Link>
             </div>
           </TabsContent>
 
-          <TabsContent value="conjuntos">
+          <TabsContent value="clientes">
             <div className="ml-auto flex items-end gap-2">
               <Button size="sm" variant="outline" className="h-8 gap-1">
                 <File className="h-3.5 w-3.5" />
@@ -72,11 +73,11 @@ export default function ContactosPage() {
                   Exportar
                 </span>
               </Button>
-              <Link href={'/articulos/agregarconjunto'} >
+              <Link href={'/proveedores/agregarcliente'} >
                 <Button size="sm" className="h-8 gap-1">
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Añadir conjunto
+                    Añadir cliente
                   </span>
                 </Button>
               </Link>
