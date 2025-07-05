@@ -7,6 +7,7 @@ import ModalMensaje from './ui/ModalMensaje';
 
 type Props = {
   idArticulo: number | null;
+  onSuccess?: () => void;
 };
 
 type Form = {
@@ -19,13 +20,12 @@ type Form = {
   tipo_movimiento_id: number;
 };
 
-export default function FormularioMovimiento({ idArticulo }: Props) {
+export default function FormularioMovimiento({ idArticulo, onSuccess }: Props) {
   const [tipo, setTipo] = useState('1');
   const [proveedores, setProveedores] = useState<any[]>([]);
   const [usuarios, setUsuarios] = useState<any[]>([]);
   const [unidades, setUnidades] = useState<any[]>([]);
   const [proyectos, setProyectos] = useState<any[]>([]);
-
   const [stockInfo, setStockInfo] = useState({ stock: 0, reservado: 0 });
 
   const [form, setForm] = useState<Form>({
@@ -41,13 +41,11 @@ export default function FormularioMovimiento({ idArticulo }: Props) {
   const [modalConfirmar, setModalConfirmar] = useState(false);
   const [modalMensaje, setModalMensaje] = useState<{ mostrar: boolean; mensaje: string }>({ mostrar: false, mensaje: '' });
 
-  // Actualizar el artículo desde props
   useEffect(() => {
     setForm((prev) => ({ ...prev, id_articulo: idArticulo }));
     if (idArticulo) fetchStock(idArticulo);
   }, [idArticulo]);
 
-  // Cargar datos iniciales
   useEffect(() => {
     const fetchData = async () => {
       const [prov, user, uni, proj] = await Promise.all([
@@ -64,22 +62,16 @@ export default function FormularioMovimiento({ idArticulo }: Props) {
     fetchData();
   }, []);
 
-  // Fetch para obtener stock y reservado
   const fetchStock = async (id: number) => {
     const res = await fetch(`/api/articulos/cantidades?id=${id}`);
     const json = await res.json();
 
-    if (json.error) {
-      console.error('Error al obtener cantidades:', json.error);
-      return;
+    if (!json.error) {
+      setStockInfo({
+        stock: json.cantidad_stock,
+        reservado: json.cantidad_reservada
+      });
     }
-
-    setStockInfo({
-      stock: json.cantidad_stock,
-      reservado: json.cantidad_reservada
-    });
-
-    console.log("stock:", stockInfo.stock, "reservado:", stockInfo.reservado)
   };
 
   const handleCantidadChange = (value: string) => {
@@ -89,13 +81,10 @@ export default function FormularioMovimiento({ idArticulo }: Props) {
     if (tipo === '2') limite = stockInfo.reservado;
     if (tipo === '3') limite = stockInfo.stock - stockInfo.reservado;
 
-    const nuevaCantidad = Math.max(0, Math.min(cantidad, limite));
-
-    setForm((prev) => ({ ...prev, cantidad: nuevaCantidad }));
+    setForm((prev) => ({ ...prev, cantidad: Math.max(0, Math.min(cantidad, limite)) }));
   };
 
   const handleSubmit = async () => {
-    console.log(form)
     const res = await fetch('/api/proyectos/movimientos', {
       method: 'POST',
       body: JSON.stringify({
@@ -111,6 +100,10 @@ export default function FormularioMovimiento({ idArticulo }: Props) {
     const json = await res.json();
     setModalConfirmar(false);
     setModalMensaje({ mostrar: true, mensaje: json.mensaje || json.error });
+
+    if (json.ok && typeof onSuccess === 'function') {
+      onSuccess();
+    }
   };
 
   return (

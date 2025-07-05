@@ -3,6 +3,7 @@
 import { ArrowLeftRight } from "lucide-react"
 import { useEffect, useState } from "react"
 import ModalMovimiento from "./ModalMovimiento"
+import { Skeleton } from "./ui/skeleton"
 
 type ArticuloRaw = {
   id_articulo: number
@@ -53,6 +54,12 @@ export default function TablaArticulos() {
     setArticuloSeleccionado(id)
     setModalAbierto(true)
   }
+
+  const refetchData = async () => {
+    const res = await fetch("/api/articulos/vista_detalle_articulo");
+    const json: ArticuloRaw[] = await res.json();
+    setData(json);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -220,17 +227,23 @@ export default function TablaArticulos() {
           </tbody>
         </table>
         {articulosFiltrados.length === 0 && (
-          <div className="mt-4 text-center text-gray-500">No se encontraron artículos.</div>
+          <>
+            <Skeleton className="h-[20px] w-full rounded-full my-2">Cargando</Skeleton>
+            {/* <div className="mt-4 text-center text-gray-500">No se encontraron artículos.</div> */}
+          </>
+
         )}
       </div>
-
 
       <ModalMovimiento
         open={modalAbierto}
         onClose={() => setModalAbierto(false)}
         idArticulo={articuloSeleccionado}
+        onSuccess={() => {
+          setModalAbierto(false);
+          refetchData(); // vuelve a hacer fetch y actualiza la tabla
+        }}
       />
-
 
 
     </div>
