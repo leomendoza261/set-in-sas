@@ -85,7 +85,7 @@ export default function FormularioMovimiento({ idArticulo, onSuccess }: Props) {
   };
 
   const handleSubmit = async () => {
-    const res = await fetch('/api/proyectos/movimientos', {
+    const res = await fetch('/api/articulos/movimientos', {
       method: 'POST',
       body: JSON.stringify({
         ...form,

@@ -1,5 +1,8 @@
+// components/modals/ModalEditarArticulo.tsx
+'use client';
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import FormularioMovimiento from './AgregarMovimientos';
+import FormularioModificarArticulo from './ModificarArticulo';
 
 type Props = {
   open: boolean;
@@ -8,15 +11,15 @@ type Props = {
   onSuccess?: () => void;
 };
 
-export default function ModalMovimiento({ open, onClose, idArticulo, onSuccess }: Props) {
+export default function ModalEditarArticulo({ open, onClose, idArticulo, onSuccess }: Props) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-xl" aria-describedby={undefined}>
         <DialogHeader>
-          <DialogTitle>Registrar Movimiento</DialogTitle>
+          <DialogTitle >Editar artículo</DialogTitle>
         </DialogHeader>
 
-        <FormularioMovimiento idArticulo={idArticulo} onSuccess={onSuccess} />
+        <FormularioModificarArticulo idArticulo={idArticulo} onSuccess={onSuccess} />
       </DialogContent>
     </Dialog>
   );

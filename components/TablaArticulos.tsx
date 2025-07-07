@@ -1,9 +1,11 @@
 "use client"
 
-import { ArrowLeftRight } from "lucide-react"
+import { ArrowLeftRight, Pencil } from "lucide-react"
 import { useEffect, useState } from "react"
 import ModalMovimiento from "./ModalMovimiento"
 import { Skeleton } from "./ui/skeleton"
+import ModalEditarArticulo from "./Articulos/ModalModificarArticulos"
+
 
 type ArticuloRaw = {
   id_articulo: number
@@ -48,12 +50,19 @@ export default function TablaArticulos() {
   const [filtroStockCero, setFiltroStockCero] = useState(false)
 
   const [modalAbierto, setModalAbierto] = useState(false)
+  const [modalEditarAbierto, setModalEditarAbierto] = useState(false);
   const [articuloSeleccionado, setArticuloSeleccionado] = useState<number | null>(null)
 
   const abrirModalMovimiento = (id: number) => {
     setArticuloSeleccionado(id)
     setModalAbierto(true)
   }
+
+  const abrirModalModificar = (id: number) => {
+    setArticuloSeleccionado(id);
+    setModalEditarAbierto(true);
+  };
+
 
   const refetchData = async () => {
     const res = await fetch("/api/articulos/vista_detalle_articulo");
@@ -66,6 +75,7 @@ export default function TablaArticulos() {
       const res = await fetch("/api/articulos/vista_detalle_articulo")
       const json: ArticuloRaw[] = await res.json()
       setData(json)
+      console.log(json)
     }
 
     const fetchTipos = async () => {
@@ -221,6 +231,7 @@ export default function TablaArticulos() {
                 </td>
                 <td className="border px-2 py-1 space-x-1 text-center">
                   <button className="text-blue-500 " onClick={() => abrirModalMovimiento(art.id_articulo)}><ArrowLeftRight className="h-3.5 w-3.5" /></button>
+                  <button className="text-blue-500 " onClick={() => abrirModalModificar(art.id_articulo)}><Pencil className="h-3.5 w-3.5" /></button>
                 </td>
               </tr>
             ))}
@@ -245,6 +256,15 @@ export default function TablaArticulos() {
         }}
       />
 
+      <ModalEditarArticulo
+        open={modalEditarAbierto}
+        onClose={() => setModalEditarAbierto(false)}
+        idArticulo={articuloSeleccionado}
+        onSuccess={() => {
+          setModalEditarAbierto(false);
+          refetchData();
+        }}
+      />
 
     </div>
   )
