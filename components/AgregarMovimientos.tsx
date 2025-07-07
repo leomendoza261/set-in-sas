@@ -41,11 +41,20 @@ export default function FormularioMovimiento({ idArticulo, onSuccess }: Props) {
   const [modalConfirmar, setModalConfirmar] = useState(false);
   const [modalMensaje, setModalMensaje] = useState<{ mostrar: boolean; mensaje: string }>({ mostrar: false, mensaje: '' });
 
+  // 🔁 Actualizar id_articulo si cambia desde props
   useEffect(() => {
-    setForm((prev) => ({ ...prev, id_articulo: idArticulo }));
-    if (idArticulo) fetchStock(idArticulo);
+    if (typeof idArticulo === 'number' && !isNaN(idArticulo)) {
+      setForm((prev) => ({
+        ...prev,
+        id_articulo: idArticulo,
+        cantidad: null  // también puede resetear cantidad si querés
+      }));
+      fetchStock(idArticulo);
+    }
   }, [idArticulo]);
 
+
+  // 🔁 Cargar opciones iniciales
   useEffect(() => {
     const fetchData = async () => {
       const [prov, user, uni, proj] = await Promise.all([
@@ -65,7 +74,6 @@ export default function FormularioMovimiento({ idArticulo, onSuccess }: Props) {
   const fetchStock = async (id: number) => {
     const res = await fetch(`/api/articulos/cantidades?id=${id}`);
     const json = await res.json();
-
     if (!json.error) {
       setStockInfo({
         stock: json.cantidad_stock,
@@ -115,6 +123,8 @@ export default function FormularioMovimiento({ idArticulo, onSuccess }: Props) {
         }}
         className="space-y-4 p-4 border rounded max-w-md"
       >
+        <p>Código detectado: <strong>{String(idArticulo || '')}</strong></p>
+
         <select
           value={tipo}
           onChange={(e) => {

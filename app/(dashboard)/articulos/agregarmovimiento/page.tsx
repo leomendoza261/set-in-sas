@@ -28,14 +28,14 @@ export default function AgregarMovimientoPage() {
       <Tabs>
         <div className="flex items-center">
           <div className="ml-auto flex items-center gap-2 mb-1">
-            <Button>
-              <Camera className='w-4 h-4' />
-            </Button>
-            {/* <EscanerArticulo
+            <EscanerArticulo
               onCodigoDetectado={(codigo) => {
-                setIdArticulo(Number(codigo));
+                const num = Number(codigo);
+                if (!isNaN(num)) {
+                  setIdArticulo(num);
+                }
               }}
-            /> */}
+            />
           </div>
         </div>
       </Tabs>
